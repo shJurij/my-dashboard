@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import os
 
 # ========== 1. ЗАГРУЗКА ДАННЫХ ==========
-folder_path = r"D:\DWNLD\Раз"
+folder_path = os.getcwd()
 df = pd.read_excel(os.path.join(folder_path, "merged_data.xlsx"))
 
 # Очищаем данные
