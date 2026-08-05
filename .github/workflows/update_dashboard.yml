@@ -1,0 +1,42 @@
+name: Update Dashboard Daily
+
+on:
+  # Автоматический запуск каждый день в 9:00 по UTC
+  schedule:
+    - cron: '0 9 * * *'
+  # Возможность запустить вручную из интерфейса GitHub
+  workflow_dispatch:
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Загружаем код из репозитория
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Устанавливаем Python
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    # 3. Устанавливаем библиотеки
+    - name: Install dependencies
+      run: |
+        pip install pandas openpyxl plotly
+
+    # 4. Запускаем скрипт, который создаёт дашборд
+    - name: Run dashboard generator
+      run: |
+        python dashboard_generator.py
+
+    # 5. Сохраняем изменения в репозитории
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add *.xlsx index.html
+        git diff --staged --quiet || git commit -m "Автоматическое обновление данных и дашборда $(date +'%Y-%m-%d')"
+        git push
