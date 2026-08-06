@@ -10,35 +10,61 @@ on:
 jobs:
   update-dashboard:
     runs-on: ubuntu-latest
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> ca850ff80673f420da9961e60e0dda77a3fdfc7e
     steps:
     # 1. Загружаем код из репозитория
     - name: Checkout repository
       uses: actions/checkout@v4
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> ca850ff80673f420da9961e60e0dda77a3fdfc7e
     # 2. Устанавливаем Python
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> ca850ff80673f420da9961e60e0dda77a3fdfc7e
     # 3. Устанавливаем библиотеки
     - name: Install dependencies
       run: |
         pip install pandas openpyxl plotly
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> ca850ff80673f420da9961e60e0dda77a3fdfc7e
     # 4. Запускаем скрипт, который создаёт дашборд
     - name: Run dashboard generator
       run: |
         python dashboard_generator.py
+<<<<<<< HEAD
 
     # 5. Сохраняем изменения в репозитории
     - name: Commit and push changes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+=======
+    
+    # 5. Сохраняем изменения в репозитории
+    - name: Commit and push changes
+>>>>>>> ca850ff80673f420da9961e60e0dda77a3fdfc7e
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add *.xlsx index.html
         git diff --staged --quiet || git commit -m "Автоматическое обновление данных и дашборда $(date +'%Y-%m-%d')"
+<<<<<<< HEAD
         git push https://x-access-token:${GITHUB_TOKEN}@github.com/shJurij/my-dashboard.git
+=======
+        git push
+>>>>>>> ca850ff80673f420da9961e60e0dda77a3fdfc7e
