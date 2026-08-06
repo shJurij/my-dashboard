@@ -1,12 +1,10 @@
-<<<<<<< HEAD
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import os
 
 # ========== 1. ЗАГРУЗКА ДАННЫХ ==========
-# Используем текущую папку проекта
-folder_path = os.getcwd()  # или просто "."
+folder_path = os.getcwd()
 
 # Читаем исходные файлы
 df_main = pd.read_excel(os.path.join(folder_path, "Assignm1.xlsx"))
@@ -16,36 +14,8 @@ df_achievements = pd.read_excel(os.path.join(folder_path, "Assignm3.xlsx"))
 # Объединяем данные
 df_finance = df_finance.rename(columns={'Name': 'ФИО'})
 df_achievements.columns = df_achievements.columns.str.strip()
-df_merged = df_main.merge(df_finance, on='ФИО', how='left')
-df_merged = df_merged.merge(df_achievements, on='ФИО', how='left')
-
-# Очищаем данные
-df_merged['Написано профстатей'] = pd.to_numeric(df_merged['Написано профстатей'], errors='coerce').fillna(0)
-df_merged['Реализовано крупных проектов'] = pd.to_numeric(df_merged['Реализовано крупных проектов'], errors='coerce').fillna(0)
-df_merged['Профвыступлений'] = pd.to_numeric(df_merged['Профвыступлений'], errors='coerce').fillna(0)
-
-# Сохраняем объединённые данные (опционально)
-df_merged.to_excel(os.path.join(folder_path, "merged_data.xlsx"), index=False)
-
-# ========== 2. ДАЛЬШЕ ИДЁТ ВЕСЬ ОСТАЛЬНОЙ ВАШ КОД С ГРАФИКАМИ ==========
-# (Здесь должен быть ваш код с fig1, fig2, fig3, fig4, fig5, fig6)
-# ...
-
-# ========== 3. СОХРАНЕНИЕ HTML ==========
-output_html = os.path.join(folder_path, "index.html")
-with open(output_html, 'w', encoding='utf-8') as f:
-    f.write(html_content)
-
-print(f"✅ Дашборд создан: {output_html}")
-=======
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-import os
-
-# ========== 1. ЗАГРУЗКА ДАННЫХ ==========
-folder_path = os.getcwd()
-df = pd.read_excel(os.path.join(folder_path, "merged_data.xlsx"))
+df = df_main.merge(df_finance, on='ФИО', how='left')
+df = df.merge(df_achievements, on='ФИО', how='left')
 
 # Очищаем данные
 df['Написано профстатей'] = pd.to_numeric(df['Написано профстатей'], errors='coerce').fillna(0)
@@ -65,7 +35,6 @@ color_scale = ['#3d3814', '#4b4230', '#a47a58', '#d4a271', '#f4c28a']
 color_sequence = ['#3d3814', '#4b4230', '#a47a58', '#d4a271', '#b4c4bb']
 
 
-# Функция для преобразования HEX в RGBA
 def hex_to_rgba(hex_color, alpha=0.25):
     hex_color = hex_color.lstrip('#')
     if len(hex_color) == 6:
@@ -74,10 +43,9 @@ def hex_to_rgba(hex_color, alpha=0.25):
     return 'rgba(0,0,0,0.25)'
 
 
-print("🚀 Создаём обновлённый дашборд с новой цветовой схемой...")
+print("🚀 Создаём обновлённый дашборд...")
 
 # ========== 3. СОЗДАНИЕ ГРАФИКОВ ==========
-# 1. Доход по отраслям
 fig1 = px.box(df, x='Отрасль', y='Annual Income, mln RUR',
               title='💰 Распределение доходов по отраслям',
               color='Отрасль',
@@ -90,7 +58,6 @@ fig1.update_layout(
     paper_bgcolor='white'
 )
 
-# 2. Количество сотрудников по отраслям
 fig2 = px.histogram(df, x='Отрасль',
                     title='👥 Количество сотрудников по отраслям',
                     color='Отрасль',
@@ -103,7 +70,6 @@ fig2.update_layout(
     paper_bgcolor='white'
 )
 
-# 3. Зависимость дохода от достижений
 fig3 = px.scatter(df, x='Реализовано крупных проектов',
                   y='Annual Income, mln RUR',
                   size='Написано профстатей',
@@ -121,7 +87,6 @@ fig3.update_layout(
     paper_bgcolor='white'
 )
 
-# 4. Топ-10 сотрудников по доходу
 top10 = df.nlargest(10, 'Annual Income, mln RUR')
 fig4 = px.bar(top10, x='ФИО', y='Annual Income, mln RUR',
               title='🏆 Топ-10 сотрудников по доходу',
@@ -137,7 +102,6 @@ fig4.update_layout(
     paper_bgcolor='white'
 )
 
-# 5. Радар достижений для топ-5 сотрудников (ИСПРАВЛЕН)
 top5 = df.nlargest(5, 'Annual Income, mln RUR')
 fig5 = go.Figure()
 radar_colors_hex = ['#3d3814', '#4b4230', '#a47a58', '#d4a271', '#b4c4bb']
@@ -145,7 +109,6 @@ radar_colors_hex = ['#3d3814', '#4b4230', '#a47a58', '#d4a271', '#b4c4bb']
 for i, (_, row) in enumerate(top5.iterrows()):
     hex_color = radar_colors_hex[i % len(radar_colors_hex)]
     rgba_color = hex_to_rgba(hex_color, 0.25)
-
     fig5.add_trace(go.Scatterpolar(
         r=[row['Реализовано крупных проектов'],
            row['Профвыступлений'],
@@ -176,7 +139,6 @@ fig5.update_layout(
     paper_bgcolor='white'
 )
 
-# 6. Средний доход по отраслям
 avg_income_by_industry = df.groupby('Отрасль')['Annual Income, mln RUR'].mean().reset_index()
 fig6 = px.bar(avg_income_by_industry, x='Отрасль', y='Annual Income, mln RUR',
               title='📊 Средний доход по отраслям',
@@ -191,8 +153,6 @@ fig6.update_layout(
     plot_bgcolor='white',
     paper_bgcolor='white'
 )
-
-print("📊 Генерируем HTML с обновлённым дизайном...")
 
 # ========== 4. ГЕНЕРАЦИЯ HTML ==========
 html_content = f"""
@@ -338,14 +298,9 @@ html_content = f"""
 </html>
 """
 
-# ========== 5. СОХРАНЕНИЕ ФАЙЛА ==========
+# ========== 5. СОХРАНЕНИЕ ==========
 output_html = os.path.join(folder_path, "index.html")
 with open(output_html, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
-print(f"✅ Дашборд обновлён: {output_html}")
-print("📂 Откройте файл в браузере для просмотра!")
-print("\n🎨 Использованы цвета из вашей палитры:")
-for name, hex_color in colors.items():
-    print(f"   {name}: {hex_color}")
->>>>>>> ca850ff80673f420da9961e60e0dda77a3fdfc7e
+print(f"✅ Дашборд создан: {output_html}")
