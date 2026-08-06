@@ -3,7 +3,7 @@ name: Update Dashboard Daily
 on:
   # Автоматический запуск каждый день в 9:00 по UTC
   schedule:
-    - cron: '0 9 * * *'
+    - cron: '0 5 * * *'
   # Возможность запустить вручную из интерфейса GitHub
   workflow_dispatch:
 
